@@ -1,0 +1,1 @@
+This is an opinionated stack of libraries for web application development.
