@@ -2,18 +2,21 @@ import { Module, Injectable } from '@nestjs/common';
 import { KeycloakService } from './keycloak.service';
 import { KeycloakController } from './keycloak.controller';
 import { KeycloakStrategy } from './keycloak.strategy'
+import { ConfigService } from '@nestjs/config';
+
 
 const keycloakStrategyConfig = {
   provide: 'KEYCLOAK_STRATEGY_CONFIG',
-  useValue: {
-    clientID: 'client',
-    realm: 'databrary',
+  useFactory: (config: ConfigService) => ({
+    clientID: config.get('KEYCLOAK_CLIENT_ID'),
+    realm: config.get('KEYCLOAK_REALM'),
     publicClient: 'false',
-    clientSecret: 'd527f007-35d8-4956-a904-',
+    clientSecret: config.get('KEYCLOAK_CLIENT_SECRET'),
     sslRequired: 'none',
-    authServerURL: 'http://localhost:8001/auth',
-    callbackURL: 'http://localhost:8000/keycloak/auth/callback'
-  }
+    authServerURL: config.get('KEYCLOAK_AUTH_SERVER_URL'),
+    callbackURL: config.get('KEYCLOAK_CALLBACK_URL')
+  }),
+  inject: [ConfigService]
 }
 
 @Module({
